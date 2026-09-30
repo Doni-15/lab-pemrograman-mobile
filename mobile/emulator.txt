@@ -1,0 +1,5 @@
+emulator @Pixel_5_API_34 \
+  -memory 2048 \
+  -cores 2 \
+  -gpu host \
+  -no-boot-anim
