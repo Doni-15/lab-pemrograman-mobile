@@ -1,184 +1,143 @@
 import 'package:anime_verse/config/routes.dart';
-import 'package:anime_verse/providers/anime_tab_provider.dart';
-import 'package:anime_verse/providers/favorite_provider.dart';
-import 'package:anime_verse/widgets/anime_app_confirm_dialog.dart';
-import 'package:anime_verse/widgets/anime_app_menu_tile.dart';
-import 'package:anime_verse/widgets/anime_app_page_title.dart';
-import 'package:anime_verse/widgets/anime_app_snack_bar.dart';
-import 'package:anime_verse/widgets/anime_app_stat_tile.dart';
-import 'package:anime_verse/widgets/anime_content_wrapper.dart';
-import 'package:anime_verse/widgets/anime_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../widgets/app_scaffold.dart';
+import '../widgets/profile_button.dart';
 
-
-
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final favoriteCount = ref.watch(favoriteAnimeIdsProvider).length;
-
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: AnimeContentWrapper(
-            maxWidth: 720,
-            padded: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 16),
-
-                const AnimeAppPageTitle(
-                  title: 'Profil',
-                  subtitle: 'Kelola akun dan preferensimu',
-                ),
-
-                const SizedBox(height: 24),
-
-                const _ProfileSummary(),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  children: [
-                    Expanded(
-                      child: AnimeAppStatTile(
-                        value: '$favoriteCount',
-                        label: 'Favorit',
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return AppScaffold(
+      appBar: AppBar(
+        title: Text("Profile", style: TextStyle(color: Colors.white,
+            fontWeight: FontWeight.w800, fontSize: screenWidth * 0.06)),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(screenWidth * 0.04),
+        child: Column(
+          children: [
+            SizedBox(height: screenHeight * 0.02),
+            // Profile Header
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: screenWidth *
+                  0.04),
+              child: Column(
+                children: [
+                  Container(
+                    width: screenWidth * 0.25,
+                    height: screenWidth * 0.25,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color:
+                      Colors.white.withValues(alpha: 0.3), width: 3),
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/black_clover.jpg', // sesuaikan dengan gambar profil yang tersedia
+                        fit: BoxFit.cover,
+                        width: screenWidth * 0.25,
+                        height: screenWidth * 0.25,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: AnimeAppStatTile(value: '42', label: 'Ditonton'),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Text('IKLC AnimeVerse', style: TextStyle(fontSize:
+                  screenWidth * 0.055, fontWeight: FontWeight.bold, color: Colors.white)),
+                  SizedBox(height: screenHeight * 0.005),
+                  Text('iklcanimeverse@gmail.com', style:
+                  TextStyle(fontSize: screenWidth * 0.038, color: Colors.white70)),
+                  SizedBox(height: screenHeight * 0.015),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal:
+                    screenWidth * 0.04, vertical: screenHeight * 0.008),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(screenWidth *
+                          0.05),
                     ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: AnimeAppStatTile(value: '8', label: 'Ulasan'),
+                    child: Text(
+                      'Member since September 2026',
+                      style: TextStyle(fontSize: screenWidth * 0.032,
+                          color: Colors.white, fontWeight: FontWeight.w500),
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 28),
-
-                AnimeAppMenuTile(
-                  icon: Icons.edit_outlined,
-                  title: 'Edit Profil',
-                  subtitle: 'Ubah nama dan foto',
-                  onTap: () {
-                    AnimeAppSnackBar.comingSoon(context, 'Edit Profil');
-                  },
-                ),
-                const SizedBox(height: 12),
-                AnimeAppMenuTile(
-                  icon: Icons.notifications_none_rounded,
-                  title: 'Notifikasi',
-                  subtitle: 'Atur pemberitahuan episode baru',
-                  onTap: () {
-                    AnimeAppSnackBar.comingSoon(context, 'Notifikasi');
-                  },
-                ),
-                const SizedBox(height: 12),
-                AnimeAppMenuTile(
-                  icon: Icons.language_rounded,
-                  title: 'Bahasa',
-                  subtitle: 'Bahasa Indonesia',
-                  onTap: () {
-                    AnimeAppSnackBar.comingSoon(context, 'Bahasa');
-                  },
-                ),
-                const SizedBox(height: 12),
-                AnimeAppMenuTile(
-                  icon: Icons.info_outline_rounded,
-                  title: 'Tentang Aplikasi',
-                  onTap: () {
-                    AnimeAppSnackBar.comingSoon(context, 'Tentang Aplikasi');
-                  },
-                ),
-                const SizedBox(height: 12),
-                AnimeAppMenuTile(
-                  icon: Icons.logout_rounded,
-                  title: 'Keluar',
-                  isDestructive: true,
-                  onTap: () async {
-                    final confirmed = await AnimeAppConfirmDialog.show(
-                      context,
-                      icon: Icons.logout_rounded,
-                      title: 'Keluar dari akun?',
-                      message:
-                          'Kamu perlu masuk lagi untuk melanjutkan '
-                          'menonton anime favoritmu.',
-                      confirmLabel: 'Ya, Keluar',
-                      isDestructive: true,
-                    );
-
-                    if (!confirmed || !context.mounted) {
-                      return;
-                    }
-
-                    ref.read(animeTabProvider.notifier).select(AnimeTab.home);
-                    AnimeAppSnackBar.info(
-                      context,
-                      'Berhasil keluar dari akun.',
-                    );
-                    context.go(Routes.login);
-                  },
-                ),
-
-                const SizedBox(height: 24),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
+            SizedBox(height: screenHeight * 0.04),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Account Settings', style: TextStyle(fontSize:
+              screenWidth * 0.045, fontWeight: FontWeight.w600, color: Colors.white)),
+            ),
+            SizedBox(height: screenHeight * 0.015),
+            ProfileButton(
+              icon: Icons.person_outline,
+              title: 'Change Username',
+              subtitle: 'Update your display name',
+              onTap: () {
+                // Static dummy function
+              },
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            ProfileButton(
+              icon: Icons.lock_outline,
+              title: 'Change Password',
+              subtitle: 'Update your account password',
+              onTap: () {
+                // Static dummy function
+              },
+            ),
+            SizedBox(height: screenHeight * 0.03),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text('App Information', style: TextStyle(fontSize:
+              screenWidth * 0.045, fontWeight: FontWeight.w600, color: Colors.white)),
+            ),
+            SizedBox(height: screenHeight * 0.015),
+            ProfileButton(
+              icon: Icons.info_outline,
+              title: 'About AnimeVerse',
+              subtitle: 'Version 1.0.0',
+              onTap: () {
+                // Static dummy function
+              },
+            ),
+            SizedBox(height: screenHeight * 0.05),
+            // Logout Button (Static)
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: screenWidth *
+                  0.02),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  context.go(AppRoutes.signIn);
+                },
+                icon: Icon(Icons.logout, size: screenWidth * 0.05),
+                label: Text('Logout', style: TextStyle(fontSize:
+                screenWidth * 0.045, fontWeight: FontWeight.w600)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD34343),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: screenHeight *
+                      0.018),
+                  shape: RoundedRectangleBorder(borderRadius:
+                  BorderRadius.circular(screenWidth * 0.04)),
+                  elevation: 0,
+                ),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+          ],
         ),
-      ),
-    );
-  }
-}
-
-class _ProfileSummary extends StatelessWidget {
-  const _ProfileSummary();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 48,
-            backgroundColor: colorScheme.primaryContainer,
-            child: Icon(
-              Icons.person_rounded,
-              size: 48,
-              color: colorScheme.onPrimaryContainer,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          Text('Nama Pengguna', style: theme.textTheme.titleLarge),
-
-          const SizedBox(height: 4),
-
-          Text(
-            'pengguna@animeverse.app',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
       ),
     );
   }
