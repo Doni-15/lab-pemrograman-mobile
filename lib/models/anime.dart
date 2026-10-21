@@ -1,49 +1,44 @@
-import 'package:anime_verse/data/anime_genre.dart';
-import 'package:anime_verse/data/anime_status.dart';
-import 'package:equatable/equatable.dart';
-
-class Anime extends Equatable {
+class Anime {
+  final String id;
+  final String title;
+  final String imagePath;
+  final String genre;
+  final String rating;
+  final String totalEpisodes;
+  final String description;
   const Anime({
     required this.id,
     required this.title,
-    required this.posterPath,
-    required this.genres,
-    this.description,
-    this.rating,
-    this.releaseYear,
-    this.status,
-    this.episodeCount,
-    this.latestEpisode,
-    this.isNewEpisode = false,
-    this.isTrending = false,
+    required this.imagePath,
+    required this.genre,
+    required this.rating,
+    required this.totalEpisodes,
+    required this.description,
   });
 
-  final String id;
-  final String title;
-  final String posterPath;
-  final List<AnimeGenre> genres;
-  final String? description;
-  final double? rating;
-  final int? releaseYear;
-  final AnimeStatus? status;
-  final int? episodeCount;
-  final int? latestEpisode;
-  final bool isNewEpisode;
-  final bool isTrending;
+  //mengubah objek ke bentuk Map (untuk di encode ke JSON)
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'genre': genre,
+      'rating': rating,
+      'imagePath': imagePath,
+      'totalEpisodes': totalEpisodes,
+      'description': description,
+    };
+  }
 
-  @override
-  List<Object?> get props => [
-    id,
-    title,
-    posterPath,
-    genres,
-    description,
-    rating,
-    releaseYear,
-    status,
-    episodeCount,
-    latestEpisode,
-    isNewEpisode,
-    isTrending,
-  ];
+  //mengubah Map ke bentuk objek (untuk di decode dari JSON)
+  factory Anime.fromJson(Map<String, dynamic> json) {
+    return Anime(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      genre: json['genre'] as String,
+      rating: json['rating'] as String,
+      imagePath: json['imagePath'] as String,
+      totalEpisodes: json['totalEpisodes'] as String,
+      description: json['description'] as String,
+    );
+  }
 }

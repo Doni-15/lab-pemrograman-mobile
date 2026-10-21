@@ -1,314 +1,106 @@
-import 'package:anime_verse/data/anime_genre.dart';
-import 'package:anime_verse/data/anime_status.dart';
 import 'package:anime_verse/models/anime.dart';
 
 class DummyData {
-  const DummyData();
-  List<Anime> getAnimes() {
-    return const [
-      Anime(
-        id: 'black-clover',
-        title: 'Black Clover',
-        posterPath: 'assets/images/posters/black_clover.jpg',
+  static final List<Anime> animeList = [
+    const Anime(
+      id: '1',
+      title: 'Black Clover',
+      imagePath: 'assets/images/black_clover.jpg',
+      genre: 'Action, Adventure, Fantasy',
+      rating: '8.14',
+      totalEpisodes: '170',
+      description:
+      "Asta and Yuno were abandoned at the same church on the same day. Raised together as children, they came to know of the 'Wizard King'—a title given to the strongest mage in the kingdom—and promised that they would compete against each other for the position of the next Wizard King. However, as they grew up, the stark difference between them became evident. While Yuno is able to wield magic with amazing power and control, Asta cannot use magic at all and desperately tries to awaken his powers by training physically. When they reach the age of 15, Yuno is bestowed a spectacular Grimoire with a four-leaf clover, while Asta receives nothing. However, soon after, Yuno is attacked by a person named Lebuty, whose main purpose is to obtain Yuno's Grimoire. Asta tries to fight Lebuty, but he is outmatched. Though without hope and on the brink of defeat, he finds the strength to continue when he hears Yuno's voice. Unleashing his inner emotions in a rage, Asta receives a five-leaf clover Grimoire, a 'Black Clover' giving him enough power to defeat Lebuty. A few days later, the two friends head out into the world, both seeking the same goal—to become the Wizard King! [Written by MAL Rewrite]",
+    ),
+    const Anime(
+      id: '2',
+      title: 'My Hero Academia',
+      imagePath: 'assets/images/my_hero_academia.jpg',
+      genre: 'Action, Comedy, Super Power',
+      rating: '8.02',
+      totalEpisodes: '88',
+      description:
+      "The appearance of 'quirks,' newly discovered super powers, has been steadily increasing over the years, with 80 percent of humanity possessing various abilities from manipulation of elements to shapeshifting. This leaves the remainder of the world completely powerless, and Izuku Midoriya is one such individual. Since he was a child, the ambitious middle schooler has wanted nothing more than to be a hero. Izuku's unfair fate leaves him admiring heroes and taking notes on them whenever he can. But it seems that his persistence has borne some fruit: Izuku meets the number one hero and his personal idol, All Might. All Might's quirk is a unique ability that can be inherited, and he has chosen Izuku to be his successor! Enduring many months of grueling training, Izuku enrolls in UA High, a prestigious high school famous for its excellent hero training program, and this year's freshmen look especially promising. With his bizarre but talented classmates and the looming threat of a villainous organization, Izuku will soon learn what it really means to be a hero. [Written by MAL Rewrite]",
+    ),
+    const Anime(
+        id: '3',
+        title: 'Souso no Frieren',
+        imagePath: 'assets/images/souso_no_frieren.jpg',
+        genre: 'Adventure, Fantasy, Supernatural',
+        rating: '9.3',
+        totalEpisodes: '28',
         description:
-            'Asta, seorang pemuda tanpa kekuatan sihir, berusaha menjadi Wizard King bersama rivalnya, Yuno.',
-        rating: 4.7,
-        releaseYear: 2017,
-        genres: [AnimeGenre.action, AnimeGenre.adventure, AnimeGenre.fantasy],
-        status: AnimeStatus.finished,
-        episodeCount: 170,
-        latestEpisode: 170,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'fullmetal-alchemist-brotherhood',
+        "During their decade-long quest to defeat the Demon King, the members of the hero's party—Himmel himself, the priest Heiter, the dwarf warrior Eisen, and the elven mage Frieren—forge bonds through adventures and battles, creating unforgettable precious memories for most of them. However, the time that Frieren spends with her comrades is equivalent to merely a fraction of her life, which has lasted over a thousand years. When the party disbands after their victory, Frieren casually returns to her 'usual' routine of collecting spells across the continent. Due to her different sense of time, she seemingly holds no strong feelings toward the experiences she went through. As the years pass, Frieren gradually realizes how her days in the hero's party truly impacted her. Witnessing the deaths of two of her former companions, Frieren begins to regret having taken their presence for granted; she vows to better understand humans and create real personal connections. Although the story of that once memorable journey has long ended, a new tale is about to begin. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '4',
+        title: 'Violet evergarden the movie',
+        imagePath: 'assets/images/violet_evergarden_movie.jpg',
+        genre: 'Drama, Fantasy, Slice of Life',
+        rating: '8.67',
+        totalEpisodes: '1',
+        description:
+        "Several years have passed since the end of The Great War. As the radio tower in Leidenschaftlich continues to be built, telephones will soon become more relevant, leading to a decline in demand for 'Auto Memory Dolls.' Even so, Violet Evergarden continues to rise in fame after her constant success with writing letters. However, sometimes the one thing you long for is the one thing that does not appear. Violet Evergarden Movie follows Violet as she continues to comprehend the concept of emotion and the meaning of love. At the same time, she pursues a glimmer of hope that the man who once told her, 'I love you,' may still be alive even after the many years that have passed. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '5',
         title: 'Fullmetal Alchemist: Brotherhood',
-        posterPath: 'assets/images/posters/fullmetal_alchemist_brotherhood.jpg',
+        imagePath: 'assets/images/fullmetal_alchemist_brotherhood.jpg',
+        genre: 'Action, Adventure, Comedy',
+        rating: '9.22',
+        totalEpisodes: '64',
         description:
-            'Dua bersaudara menggunakan alkimia dalam perjalanan mencari cara untuk mengembalikan tubuh mereka.',
-        rating: 4.9,
-        releaseYear: 2009,
-        genres: [
-          AnimeGenre.action,
-          AnimeGenre.adventure,
-          AnimeGenre.drama,
-          AnimeGenre.fantasy,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 64,
-        latestEpisode: 64,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'hunter-x-hunter',
+        "After a horrific alchemy experiment goes wrong in the Elric household, brothers Edward and Alphonse are left in a catastrophic new reality. Ignoring the alchemical principle banning human transmutation, the boys attempted to bring their recently deceased mother back to life. Instead, they suffered brutal personal loss: Alphonse's body disintegrated while Edward lost a leg and then sacrificed an arm to keep Alphonse's soul in the physical realm by binding it to a hulking suit of armor. The brothers are rescued by their neighbor Pinako Rockbell and her granddaughter Winry. Known as a bio-mechanical engineering prodigy, Winry creates prosthetic limbs for Edward by utilizing 'automail,' a tough, versatile metal used in robots and combat armor. After years of training, the Elric brothers set off on a quest to restore their bodies by locating the Philosopher's Stone—a powerful gem that allows an alchemist to defy the traditional laws of Equivalent Exchange. As Edward becomes an infamous alchemist and gains the nickname 'Fullmetal,' the boys' journey embroils them in a growing conspiracy that threatens the fate of the world. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '6',
         title: 'Hunter x Hunter',
-        posterPath: 'assets/images/posters/hunter_x_hunter.jpg',
+        imagePath: 'assets/images/hunter_x_hunter.jpg',
+        genre: 'Action, Adventure, Fantasy',
+        rating: '9.12',
+        totalEpisodes: '148',
         description:
-            'Gon Freecss memulai perjalanan untuk menjadi Hunter dan menemukan ayahnya yang telah lama menghilang.',
-        rating: 4.9,
-        releaseYear: 2011,
-        genres: [AnimeGenre.action, AnimeGenre.adventure, AnimeGenre.fantasy],
-        status: AnimeStatus.ongoing,
-        isNewEpisode: true,
-        episodeCount: 148,
-        latestEpisode: 148,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'koe-no-katachi',
+        "Hunters devote themselves to accomplishing hazardous tasks, all from traversing the world's uncharted territories to locating rare items and monsters. Before becoming a Hunter, one must pass the Hunter Examination—a high-risk selection process in which most applicants end up handicapped or worse, deceased. Ambitious participants who challenge the notorious exam carry their own reason. What drives 12-year-old Gon Freecss is finding Ging, his father and a Hunter himself. Believing that he will meet his father by becoming a Hunter, Gon takes the first step to walk the same path. During the Hunter Examination, Gon befriends the medical student Leorio Paladiknight, the vindictive Kurapika, and ex-assassin Killua Zoldyck. While their motives vastly differ from each other, they band together for a common goal and begin to venture into a perilous world. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '7',
         title: 'Koe no Katachi',
-        posterPath: 'assets/images/posters/koe_no_katachi.jpg',
+        imagePath: 'assets/images/koe_no_katachi.jpg',
+        genre: 'Drama',
+        rating: '8.99',
+        totalEpisodes: '1',
         description:
-            'Seorang mantan pelaku perundungan berusaha menebus kesalahannya dan memperbaiki hubungannya dengan seseorang dari masa lalunya.',
-        rating: 4.8,
-        releaseYear: 2016,
-        genres: [AnimeGenre.drama, AnimeGenre.romance, AnimeGenre.sliceOfLife],
-        status: AnimeStatus.finished,
-        episodeCount: 1,
-        latestEpisode: 1,
-      ),
-
-      Anime(
-        id: 'my-hero-academia',
-        title: 'My Hero Academia',
-        posterPath: 'assets/images/posters/my_hero_academia.jpg',
-        description:
-            'Izuku Midoriya bermimpi menjadi pahlawan meskipun terlahir tanpa kekuatan super.',
-        rating: 4.7,
-        releaseYear: 2016,
-        genres: [AnimeGenre.action, AnimeGenre.comedy, AnimeGenre.supernatural],
-        status: AnimeStatus.ongoing,
-        isNewEpisode: true,
-        episodeCount: 170,
-        latestEpisode: 170,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'spirited-away',
-        title: 'Spirited Away',
-        posterPath: 'assets/images/posters/sen_to_chihiro_no_kamikakushi.jpg',
-        description:
-            'Chihiro terjebak di dunia roh dan harus menemukan cara untuk menyelamatkan dirinya serta orang tuanya.',
-        rating: 4.9,
-        releaseYear: 2001,
-        genres: [
-          AnimeGenre.adventure,
-          AnimeGenre.fantasy,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 1,
-        latestEpisode: 1,
-      ),
-
-      Anime(
-        id: 'frieren',
-        title: 'Frieren: Beyond Journey\'s End',
-        posterPath: 'assets/images/posters/souso_no_frieren.jpg',
-        description:
-            'Setelah perjalanan panjang bersama kelompok pahlawan berakhir, Frieren memulai perjalanan baru untuk memahami manusia dan kenangan yang ditinggalkan.',
-        rating: 4.9,
-        releaseYear: 2023,
-        genres: [AnimeGenre.adventure, AnimeGenre.drama, AnimeGenre.fantasy],
-        status: AnimeStatus.ongoing,
-        episodeCount: 28,
-        latestEpisode: 28,
-        isNewEpisode: true,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'my-neighbor-totoro',
-        title: 'My Neighbor Totoro',
-        posterPath: 'assets/images/posters/tonari_no_totoro.jpg',
-        description:
-            'Dua saudari menemukan makhluk-makhluk ajaib ketika pindah ke rumah baru di pedesaan.',
-        rating: 4.8,
-        releaseYear: 1988,
-        genres: [
-          AnimeGenre.adventure,
-          AnimeGenre.fantasy,
-          AnimeGenre.sliceOfLife,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 1,
-        latestEpisode: 1,
-      ),
-
-      Anime(
-        id: 'vinland-saga',
+        "As a wild youth, elementary school student Shouya Ishida sought to beat boredom in the cruelest ways. When the deaf Shouko Nishimiya transfers into his class, Shouya and the rest of his class thoughtlessly bully her for fun. However, when her mother notifies the school, he is singled out and blamed for everything done to her. With Shouko transferring out of the school, Shouya is left at the mercy of his classmates. He is heartlessly ostracized all throughout elementary and middle school, while teachers turn a blind eye. Now in his third year of high school, Shouya is still plagued by his wrongdoings as a young boy. Sincerely regretting his past actions, he sets out on a journey of redemption: to meet Shouko once more and make amends. Koe no Katachi tells the heartwarming tale of Shouya's reunion with Shouko and his honest attempts to redeem himself, all while being continually haunted by the shadows of his past. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '8',
         title: 'Vinland Saga',
-        posterPath: 'assets/images/posters/vinland_saga.jpg',
+        imagePath: 'assets/images/vinland_saga.jpg',
+        genre: 'Action, Adventure, Drama',
+        rating: '8.79',
+        totalEpisodes: '24',
         description:
-            'Thorfinn tumbuh di tengah peperangan dan perjalanan panjang yang membentuk kehidupannya sebagai seorang pejuang.',
-        rating: 4.8,
-        releaseYear: 2019,
-        genres: [AnimeGenre.action, AnimeGenre.adventure, AnimeGenre.drama],
-        status: AnimeStatus.finished,
-        episodeCount: 48,
-        latestEpisode: 48,
-        isTrending: true,
-      ),
-
-      Anime(
-        id: 'violet-evergarden-movie',
-        title: 'Violet Evergarden: The Movie',
-        posterPath: 'assets/images/posters/violet_evergarden_movie.jpg',
+        "Young Thorfin grew up listening to the stories of old sailors that had traveled the ocean and reached the place of legend, Vinland. It's said to be warm and fertile, a place where there would be no need for fighting—not at all like the frozen village in Iceland where he was born, and certainly not like his current life as a mercenary. War is his home now. Though his father once told him, 'You have no enemies, nobody does. There is nobody who it's okay to hurt,' as he grew, Thorfinn knew that nothing was further from the truth. The war between England and the Danes grows worse with each passing year. Death has become commonplace, and the viking mercenaries are loving every moment of it. Allying with either side will cause a massive swing in the balance of power, and the vikings are happy to make names for themselves and take any spoils they earn along the way. Among the chaos, Thorfinn must take his revenge and kill Askeladd, the man who murdered his father. The only paradise for the vikings, it seems, is the era of war and death that rages on. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '9',
+        title: 'Sen to Chihiro no Kamikakushi',
+        imagePath: 'assets/images/sen_to_chihiro_no_kamikakushi.jpg',
+        genre: 'Adventure, Supernatural',
+        rating: '8.94',
+        totalEpisodes: '1',
         description:
-            'Violet berusaha memahami arti cinta dan menghadapi perasaan yang tersisa dari masa lalunya.',
-        rating: 4.9,
-        releaseYear: 2020,
-        genres: [AnimeGenre.drama, AnimeGenre.romance, AnimeGenre.fantasy],
-        status: AnimeStatus.finished,
-        episodeCount: 1,
-        latestEpisode: 1,
-      ),
-
-      Anime(
-        id: 'elfen-lied',
-        title: 'Elfen Lied',
-        posterPath: 'assets/images/posters/elfen_lied.jpg',
+        "Stubborn, spoiled, and naïve, 10-year-old Chihiro Ogino is less than pleased when she and her parents discover an abandoned amusement park on the way to their new house. Cautiously venturing inside, she realizes that there is more to this place than meets the eye, as strange things begin to happen once dusk falls. Ghostly apparitions and food that turns her parents into pigs are just the start—Chihiro has unwittingly crossed over into the spirit world. Now trapped, she must summon the courage to live and work amongst spirits, with the help of the enigmatic Haku and the cast of unique characters she meets along the way. Vivid and intriguing, Sen to Chihiro no Kamikakushi tells the story of Chihiro's journey through an unfamiliar world as she strives to save her parents and return home. [Written by MAL Rewrite]"
+    ),
+    const Anime(
+        id: '10',
+        title: 'Tonari no Totoro',
+        imagePath: 'assets/images/tonari_no_totoro.jpg',
+        genre: 'Adventure, Comedy, Supernatural',
+        rating: '8.16',
+        totalEpisodes: '1',
         description:
-            'Lucy, seorang Diclonius dengan kekuatan telekinetik yang mematikan, melarikan diri dari fasilitas penelitian dan kemudian menghadapi kembali masa lalu yang penuh kekerasan dan trauma.',
-        rating: 4.8,
-        releaseYear: 2004,
-        genres: [
-          AnimeGenre.action,
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 13,
-        latestEpisode: 13,
-      ),
-
-      Anime(
-        id: 'higurashi-when-they-cry',
-        title: 'Higurashi: When They Cry',
-        posterPath: 'assets/images/posters/higurashi.jpg',
-        description:
-            'Keiichi Maebara pindah ke desa Hinamizawa dan mulai mengetahui berbagai kejadian misterius serta pembunuhan yang berkaitan dengan festival tahunan desa tersebut.',
-        rating: 4.7,
-        releaseYear: 2006,
-        genres: [
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 26,
-        latestEpisode: 26,
-      ),
-
-      Anime(
-        id: 'mirai-nikki',
-        title: 'Future Diary',
-        posterPath: 'assets/images/posters/mirai_nikki.jpg',
-        description:
-            'Yukiteru Amano terlibat dalam permainan bertahan hidup setelah menerima buku harian yang dapat meramalkan masa depan dan harus menghadapi pemilik buku harian lainnya.',
-        rating: 4.7,
-        releaseYear: 2011,
-        genres: [
-          AnimeGenre.action,
-          AnimeGenre.drama,
-          AnimeGenre.romance,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 26,
-        latestEpisode: 26,
-      ),
-
-      Anime(
-        id: 'another',
-        title: 'Another',
-        posterPath: 'assets/images/posters/another.jpg',
-        description:
-            'Koichi Sakakibara pindah ke sekolah baru dan bertemu Mei Misaki, seorang gadis yang tampaknya diabaikan oleh teman-teman sekelasnya di tengah serangkaian kematian misterius.',
-        rating: 4.6,
-        releaseYear: 2012,
-        genres: [
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 12,
-        latestEpisode: 12,
-      ),
-
-      Anime(
-        id: 'shiki',
-        title: 'Shiki',
-        posterPath: 'assets/images/posters/shiki.jpg',
-        description:
-            'Kematian misterius mulai terjadi setelah sebuah keluarga pindah ke sebuah rumah besar di desa terpencil, membawa penduduk desa ke dalam konflik mengerikan tentang kehidupan dan kematian.',
-        rating: 4.6,
-        releaseYear: 2010,
-        genres: [
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 22,
-        latestEpisode: 22,
-      ),
-
-      Anime(
-        id: 'gantz',
-        title: 'Gantz',
-        posterPath: 'assets/images/posters/gantz.jpg',
-        description:
-            'Setelah meninggal dalam sebuah kecelakaan, Kei Kurono dan orang-orang lain dipaksa mengikuti permainan misterius yang mengharuskan mereka memburu makhluk asing dengan mempertaruhkan nyawa.',
-        rating: 4.6,
-        releaseYear: 2004,
-        genres: [
-          AnimeGenre.action,
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 26,
-        latestEpisode: 26,
-      ),
-
-      Anime(
-        id: 'devilman-crybaby',
-        title: 'Devilman Crybaby',
-        posterPath: 'assets/images/posters/devilman_crybaby.jpg',
-        description:
-            'Akira Fudo mengetahui keberadaan iblis dan memperoleh kekuatan mereka dengan cara yang membuatnya menjadi Devilman, mempertahankan hati manusia di dalam tubuh yang memiliki kekuatan iblis.',
-        rating: 4.7,
-        releaseYear: 2018,
-        genres: [
-          AnimeGenre.action,
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 10,
-        latestEpisode: 10,
-      ),
-
-      Anime(
-        id: 'corpse-party-tortured-souls',
-        title: 'Corpse Party: Tortured Souls',
-        posterPath:
-            'assets/images/posters/corpse_party_tortured_souls.jpg',
-        description:
-            'Sekelompok siswa terjebak di sebuah sekolah yang telah hancur dan dihantui setelah melakukan ritual yang seharusnya membuat mereka tetap bersama.',
-        rating: 4.4,
-        releaseYear: 2013,
-        genres: [
-          AnimeGenre.drama,
-          AnimeGenre.supernatural,
-        ],
-        status: AnimeStatus.finished,
-        episodeCount: 4,
-        latestEpisode: 4,
-      ),
-    ];
-  }
+        "In 1950s Japan, Tatsuo Kusakabe relocates himself and his two daughters, Satsuki and Mei, to the countryside to be closer to their mother, who is hospitalized due to long-term illness. As the girls grow acquainted with rural life, Mei encounters a small, bunny-like creature in the yard one day. Chasing it into the forest, she finds 'Totoro'—a giant, mystical forest spirit whom she soon befriends. Before long, Satsuki too meets Totoro, and the two girls suddenly find their lives filled with magical adventures in nature and fantastical creatures of the woods. [Written by MAL Rewrite]"
+    ),
+  ];
 }

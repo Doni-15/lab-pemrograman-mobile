@@ -1,76 +1,128 @@
-import 'package:anime_verse/providers/anime_tab_provider.dart';
-import 'package:anime_verse/providers/favorite_provider.dart';
-import 'package:anime_verse/theme/anime_colors.dart';
-import 'package:anime_verse/widgets/anime_app_card_grid.dart';
-import 'package:anime_verse/widgets/anime_app_page_title.dart';
-import 'package:anime_verse/widgets/anime_tab.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:anime_verse/screens/favorite/utils/favorite_actions.dart';
-import 'package:anime_verse/widgets/anime_app_empty_state.dart';
-import 'package:anime_verse/widgets/anime_app_round_icon_button.dart';
-import 'package:anime_verse/widgets/anime_content_wrapper.dart';
+import 'package:anime_verse/provider/app_state_provider.dart';
+import '../widgets/search_field.dart';
+import 'package:anime_verse/widgets/app_scaffold.dart';
+import 'package:anime_verse/widgets/favorite_anime_card.dart';
 
-class FavoriteScreen extends ConsumerWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final favorites = ref.watch(favoriteAnimesProvider);
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  late final TextEditingController _searchController;
 
-            AnimeContentWrapper(
-              padded: true,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: AnimeAppPageTitle(
-                  title: 'Favorit',
-                  subtitle: favorites.isEmpty
-                      ? 'Simpan anime yang kamu suka'
-                      : '${favorites.length} anime tersimpan',
-                ),
-              ),
-            ),
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(
+      text: context.read<AppStateProvider>().favoriteSearchQuery,
+    );
+  }
 
-            const SizedBox(height: 20),
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
-            Expanded(
-              child: favorites.isEmpty
-                  ? AnimeAppEmptyState(
-                      icon: Icons.favorite_border_rounded,
-                      title: 'Belum ada favorit',
-                      message:
-                          'Tekan ikon hati di halaman detail untuk '
-                          'menyimpan anime ke sini.',
-                      actionLabel: 'Jelajahi Anime',
-                      onAction: () {
-                        ref
-                          .read(animeTabProvider.notifier)
-                          .select(AnimeTab.home);
-                      },
-                    )
-                  : AnimeAppCardGrid(
-                      animes: favorites,
-                      trailingBuilder: (context, anime, index) {
-                        return AnimeAppRoundIconButton(
-                          icon: Icons.favorite_rounded,
-                          color: AnimeColors.error,
-                          size: 36,
-                          tooltip: 'Hapus dari favorit',
-                          onPressed: () {
-                            FavoriteActions.toggle(context, ref, anime);
-                          },
-                        );
-                      },
-                    ),
-            ),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    return AppScaffold(
+      appBar: AppBar(
+        title: Text(
+          "Favorite Anime",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: screenWidth * 0.06,
+          ),
         ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          // Search Bar bisa dipakai ulang dari HomeScreen (opsional, sesuai selera)
+          Consumer<AppStateProvider>(
+            builder: (context, provider, child) {
+              return SearchField(
+                controller: _searchController,
+                hintText: 'Search favorites',
+                onChanged: (value) {
+                  provider.setFavoriteSearchQuery(value);
+                },
+                showClear: provider.favoriteSearchQuery.isNotEmpty,
+                onClear: () {
+                  _searchController.clear();
+                  provider.setFavoriteSearchQuery('');
+                },
+              );
+            },
+          ),
+          SizedBox(height: screenHeight * 0.01),
+
+          // Favorite Anime List
+          Expanded(
+            child: Consumer<AppStateProvider>(
+              builder: (context, favoriteProvider, child) {
+                final favorites = favoriteProvider.getFilteredFavorites();
+
+                // Tampil jika favorit kosong atau pencarian tidak menemukan hasil.
+                if (favorites.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.favorite_border,
+                          size: 32,
+                          color: Colors.white70,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          favoriteProvider.favorites.isEmpty
+                              ? 'Belum ada anime favorit'
+                              : 'Anime tidak ditemukan',
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.04,
+                            color: Colors.white70,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return ListView.builder(
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.01,
+                  ),
+                  itemCount: favorites.length,
+                  itemBuilder: (context, index) {
+                    final favoriteAnime = favorites[index];
+
+                    return FavoriteAnimeCard(
+                      id: favoriteAnime.id,
+                      title: favoriteAnime.title,
+                      genre: favoriteAnime.genre,
+                      rating: favoriteAnime.rating,
+                      imagePath: favoriteAnime.imagePath,
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

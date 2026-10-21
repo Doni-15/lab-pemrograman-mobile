@@ -1,232 +1,282 @@
-import 'dart:math' as math;
-import 'package:anime_verse/providers/favorite_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:anime_verse/config/routes.dart';
-import 'package:anime_verse/data/anime_providers.dart';
+import 'package:anime_verse/data/dummy_data.dart';
 import 'package:anime_verse/models/anime.dart';
-import 'package:anime_verse/screens/detail/widgets/detail_hero.dart';
-import 'package:anime_verse/screens/detail/widgets/detail_info_section.dart';
-import 'package:anime_verse/screens/favorite/utils/favorite_actions.dart';
-import 'package:anime_verse/utils/anime_responsive.dart';
-import 'package:anime_verse/widgets/anime_app_card.dart';
-import 'package:anime_verse/widgets/anime_app_card_row.dart';
-import 'package:anime_verse/widgets/anime_app_empty_state.dart';
-import 'package:anime_verse/widgets/anime_app_poster_image.dart';
-import 'package:anime_verse/widgets/anime_app_round_icon_button.dart';
-import 'package:anime_verse/widgets/anime_app_section_header.dart';
-import 'package:anime_verse/widgets/anime_content_wrapper.dart';
+import 'package:anime_verse/widgets/app_scaffold.dart';
+import 'package:anime_verse/provider/app_state_provider.dart';
 
-class DetailScreen extends ConsumerWidget {
-  const DetailScreen({super.key, required this.animeId});
-  final String animeId;
-  static const double _wideBreakpoint = 720;
+import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
 
-  void _goBack(BuildContext context) {
-    if (context.canPop()) {
-      context.pop();
-    } else {
-      context.go(Routes.app);
-    }
-  }
+class DetailScreen extends StatelessWidget {
+  final String id;
+
+  const DetailScreen({
+    super.key,
+    required this.id,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final anime = ref.watch(animeByIdProvider(animeId));
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
-    if (anime == null) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: AnimeAppEmptyState(
-          icon: Icons.search_off_rounded,
-          title: 'Anime tidak ditemukan',
-          message: 'Anime yang kamu cari mungkin sudah dihapus.',
-          actionLabel: 'Kembali',
-          onAction: () => _goBack(context),
+    final Anime? anime = DummyData.animeList.cast<Anime?>().firstWhere((anime) =>
+      anime?.id == id,
+      orElse: () => null
+    );
+
+    if(anime == null){
+      return AppScaffold(
+        appBar: AppBar(
+          title: Text('Error'),
+        ),
+        body: const Center(
+          child: Text('Anime Tidak Ditemukan'),
         ),
       );
     }
 
-    final isFavorite = ref.watch(
-      favoriteAnimeIdsProvider.select((ids) => ids.contains(anime.id)),
-    );
-
-    final similarAnimes = ref
-        .watch(animeListProvider)
-        .where((other) {
-          return other.id != anime.id &&
-              other.genres.any(anime.genres.contains);
-        })
-        .take(8)
-        .toList();
-
-    final info = DetailInfoSection(
-      anime: anime,
-      isFavorite: isFavorite,
-      onToggleFavorite: () => FavoriteActions.toggle(context, ref, anime),
-    );
-
-    final similarSection = _SimilarSection(animes: similarAnimes);
-    final hPadding = AnimeResponsive.horizontalPadding(context);
-
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth >= _wideBreakpoint) {
-            return _buildWide(
-              context,
-              anime: anime,
-              info: info,
-              similar: similarSection,
-              hPadding: hPadding,
-              maxWidth: constraints.maxWidth,
-            );
-          }
-
-          return _buildNarrow(
-            context,
-            anime: anime,
-            info: info,
-            similar: similarSection,
-            hPadding: hPadding,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildNarrow(
-    BuildContext context, {
-    required Anime anime,
-    required Widget info,
-    required Widget similar,
-    required double hPadding,
-  }) {
-    final screenHeight = MediaQuery.sizeOf(context).height;
-    final heroHeight = math.max(320.0, math.min(480.0, screenHeight * 0.5));
-    final bottomInset = MediaQuery.paddingOf(context).bottom;
-
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          DetailHero(
-            anime: anime,
-            height: heroHeight,
-            onBack: () => _goBack(context),
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: hPadding),
-            child: info,
-          ),
-
-          const SizedBox(height: 32),
-
-          similar,
-
-          SizedBox(height: 32 + bottomInset),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildWide(
-    BuildContext context, {
-    required Anime anime,
-    required Widget info,
-    required Widget similar,
-    required double hPadding,
-    required double maxWidth,
-  }) {
-    final posterWidth = maxWidth >= 1000 ? 320.0 : 240.0;
-
-    return SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: AnimeContentWrapper(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(hPadding, 16, hPadding, 24),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: AnimeAppRoundIconButton(
-                    icon: Icons.arrow_back_rounded,
-                    tooltip: 'Kembali',
-                    onPressed: () => _goBack(context),
+    return AppScaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            floating: true,
+            pinned: true,
+            expandedHeight: screenHeight * 0.3,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: Container(
+              margin: EdgeInsets.all(screenWidth * 0.02),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
-                ),
+                ],
               ),
-
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: hPadding),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: posterWidth,
-                      child: AspectRatio(
-                        aspectRatio: AnimeAppCard.posterAspectRatio,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: AnimeAppPosterImage(path: anime.posterPath),
-                        ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Background image
+                  Image.asset(anime.imagePath, fit: BoxFit.cover),
+                  // Gradient overlay for better text visibility
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black.withValues(alpha: 0.3),
+                          Colors.transparent,
+                          Colors.black.withValues(alpha: 0.7),
+                        ],
+                        stops: const [0.0, 0.5, 1.0],
                       ),
                     ),
-
-                    const SizedBox(width: 32),
-
-                    Expanded(child: info),
-                  ],
-                ),
+                  ),
+                  // Title at the bottom of the image
+                  Positioned(
+                    bottom: screenHeight * 0.02,
+                    left: screenWidth * 0.04,
+                    right: screenWidth * 0.04,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          anime.title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenWidth * 0.07,
+                            fontWeight: FontWeight.w900,
+                            shadows: [
+                              Shadow(
+                                offset: const Offset(0, 2),
+                                blurRadius: 4,
+                                color: Colors.black.withValues(alpha:
+                                0.7),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.005),
+                        Text(
+                          anime.genre,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontSize: screenWidth * 0.04,
+                            fontWeight: FontWeight.w500,
+                            shadows: [
+                              Shadow(
+                                offset: const Offset(0, 1),
+                                blurRadius: 2,
+                                color: Colors.black.withValues(alpha:
+                                0.7),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 40),
-
-              similar,
-
-              const SizedBox(height: 32),
-            ],
+            ),
           ),
-        ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(screenWidth * 0.04),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Rating and Episodes info
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      children: [
+                        // Rating
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.03,
+                            vertical: screenHeight * 0.01,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.amber,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: screenWidth * 0.02,
+                                offset: Offset(0, screenHeight * 0.005),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.star, color: Colors.white, size:
+                              screenWidth * 0.04),
+                              SizedBox(width: screenWidth * 0.01),
+                              Text(
+                                anime.rating,
+                                style: TextStyle(color: Colors.white, fontSize:
+                                screenWidth * 0.035, fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: screenWidth * 0.05),
+                        // Total Episodes
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.03,
+                            vertical: screenHeight * 0.01,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF0b395e),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: screenWidth * 0.02,
+                                offset: Offset(0, screenHeight * 0.005),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                          ),
+                          child: Text(
+                            '${anime.totalEpisodes} Episodes',
+                            style: TextStyle(color: Colors.white, fontSize:
+                            screenWidth * 0.035, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        SizedBox(width: screenWidth * 0.05),
+                        // Add to Favorites
+                        Consumer<AppStateProvider>(
+                          builder: (context, favoriteProvider, child) {
+                            final isFavorite = favoriteProvider.isFavorite(anime.id);
+
+                            return GestureDetector(
+                              onTap: () {
+                                favoriteProvider.toggleFavorite(anime);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * 0.03,
+                                  vertical: screenHeight * 0.01,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.redAccent,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(alpha: 0.3),
+                                      blurRadius: screenWidth * 0.02,
+                                      offset: Offset(0, screenHeight * 0.005),
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(screenWidth * 0.02),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.white,
+                                      size: screenWidth * 0.04,
+                                    ),
+                                    SizedBox(width: screenWidth * 0.01),
+                                    Text(
+                                      isFavorite
+                                          ? 'Added to Favorites'
+                                          : 'Add to Favorites',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: screenWidth * 0.035,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: screenHeight * 0.03),
+                  // Description
+                  Text(
+                    'Synopsis',
+                    style: TextStyle(color: Colors.white, fontSize: screenWidth *
+                        0.05, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  Text(
+                    anime.description,
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: screenWidth * 0.038, height: 1.5),
+                    textAlign: TextAlign.justify,
+                  ),
+                  SizedBox(height: screenHeight * 0.03),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class _SimilarSection extends StatelessWidget {
-  const _SimilarSection({required this.animes});
-
-  final List<Anime> animes;
-
-  @override
-  Widget build(BuildContext context) {
-    if (animes.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AnimeAppSectionHeader(title: 'Anime Serupa'),
-
-        const SizedBox(height: 16),
-
-        AnimeAppCardRow(
-          animes: animes,
-          cardWidth: AnimeResponsive.pick<double>(
-            context,
-            mobile: 130,
-            tablet: 150,
-            desktop: 170,
-          ),
-        ),
-      ],
     );
   }
 }
