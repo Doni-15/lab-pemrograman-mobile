@@ -1,0 +1,95 @@
+name: Build and Deploy Flutter Projects
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Build all Flutter projects
+        run: |
+          mkdir -p _site
+          shopt -s nullglob
+
+          REPO_NAME="${{ github.event.repository.name }}"
+
+          # Buat kerangka awal index.html agar root URL tidak 404
+          echo "<!DOCTYPE html><html><head><meta charset='utf-8'><title>Daftar Proyek Flutter</title></head><body>" > _site/index.html
+          echo "<h1>Daftar Proyek - $REPO_NAME</h1><ul>" >> _site/index.html
+
+          for pubspec in */pubspec.yaml; do
+            project="${pubspec%/pubspec.yaml}"
+
+            if [ ! -d "$project/web" ]; then
+              echo "Skipping $project (no web folder)"
+              continue
+            fi
+
+            echo "Building $project..."
+
+            (
+              set -e
+              cd "$project"
+              flutter pub get
+              flutter build web --release \
+                --base-href "/${REPO_NAME}/${project}/"
+            )
+
+            mkdir -p "_site/$project"
+            cp -R "$project/build/web/." "_site/$project/"
+
+            # Tambahkan link proyek ke halaman index.html
+            echo "<li><a href='./$project/'>$project</a></li>" >> _site/index.html
+
+            echo "$project successfully built!"
+          done
+
+          echo "</ul></body></html>" >> _site/index.html
+          touch _site/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    if: >-
+      (github.event_name == 'push' ||
+       github.event_name == 'workflow_dispatch') &&
+      github.ref == format(
+        'refs/heads/{0}',
+        github.event.repository.default_branch
+      )
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
